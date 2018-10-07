@@ -38,25 +38,21 @@ public class FileAccessor {
         }
     }
 
-    public void clear() {
+    public void reset() {
         try {
-            seek(0);
-            FileChannel.open(Paths.get(filename), StandardOpenOption.WRITE).truncate(0).close();
+            initStreams();
+            randomAccessFile.seek(0);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            System.exit(0);
         }
     }
 
-    public void reset() {
-        initStreams();
-        seek(0);
-    }
-
-    public void seek(long pos) {
+    public void skipBytesForInputStream(int n) {
         try {
-            initStreams();
-            randomAccessFile.seek(pos);
+            //initStreams();
+            //randomAccessFile.seek(pos);
+            inputStream.skipBytes(n);
+
         } catch (IOException ioe) {
             ioe.printStackTrace();
             System.exit(0);
@@ -74,7 +70,6 @@ public class FileAccessor {
 
     public int readInt() {
         try {
-            // return randomAccessFile.readInt();
             return inputStream.readInt();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -85,13 +80,8 @@ public class FileAccessor {
 
     public void writeInt(int n) {
         try {
-            //randomAccessFile.writeInt(n);
             writeCount++;
             outputStream.writeInt(n);
-//            if (writeCount > 4000) {
-//                flush();
-//            }
-            flush();
         } catch (IOException ioe) {
             ioe.printStackTrace();
             System.exit(0);
@@ -118,7 +108,6 @@ public class FileAccessor {
             System.exit(0);
         }
     }
-
 
     public RandomAccessFile getRandomAccessFile() {
         return randomAccessFile;
